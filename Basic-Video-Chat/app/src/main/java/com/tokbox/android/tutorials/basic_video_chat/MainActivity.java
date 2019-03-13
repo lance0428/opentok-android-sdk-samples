@@ -150,11 +150,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initializeSession(String apiKey, String sessionId, String token) {
+    private void initializeSession(final String apiKey, final String sessionId, final String token) {
 
-        mSession = new Session.Builder(this, apiKey, sessionId).build();
-        mSession.setSessionListener(this);
-        mSession.connect(token);
+        Thread backgroundThread = new Thread() {
+            @Override
+            public void run() {
+                mSession = new Session.Builder(MainActivity.this, apiKey, sessionId).build();
+                mSession.setSessionListener(MainActivity.this);
+                mSession.connect(token);
+            }
+        };
+        backgroundThread.start();
     }
 
     /* Web Service Coordinator delegate methods */
