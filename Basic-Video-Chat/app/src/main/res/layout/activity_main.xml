@@ -26,6 +26,12 @@ tools:context="com.tokbox.android.tutorials.basic_video_chat.MainActivity">
             android:padding="@dimen/publisher_padding"
             android:background="@color/publisher_border_color" />
 
+        <Button
+            android:id="@+id/disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="disconnect" />
+
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
