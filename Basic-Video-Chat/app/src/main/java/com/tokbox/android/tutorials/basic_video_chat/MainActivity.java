@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -61,7 +63,15 @@ public class MainActivity extends AppCompatActivity
         // initialize view objects from your layout
         mPublisherViewContainer = (FrameLayout)findViewById(R.id.publisher_container);
         mSubscriberViewContainer = (FrameLayout)findViewById(R.id.subscriber_container);
-
+        Button disconnect = findViewById(R.id.disconnect);
+        disconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("TEST", "Disconnecting from session!");
+                mPublisher.destroy();
+                mSession.disconnect();
+            }
+        });
         requestPermissions();
     }
 
@@ -263,13 +273,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(SubscriberKit subscriberKit) {
 
-        Log.d(LOG_TAG, "onConnected: Subscriber connected. Stream: "+subscriberKit.getStream().getStreamId());
+        Log.d(LOG_TAG, "onConnected: Subscriber connected. Stream: " + getStreamIdNullSafetyFix(subscriberKit));
     }
 
     @Override
     public void onDisconnected(SubscriberKit subscriberKit) {
 
-        Log.d(LOG_TAG, "onDisconnected: Subscriber disconnected. Stream: "+subscriberKit.getStream().getStreamId());
+        Log.d(LOG_TAG, "onDisconnected: Subscriber disconnected. Stream: " + getStreamIdNullSafetyFix(subscriberKit));
+    }
+
+    private String getStreamIdNullSafetyFix(SubscriberKit subscriberKit) {
+        if (subscriberKit != null && subscriberKit.getStream() != null) {
+            return subscriberKit.getStream().getStreamId();
+        } else {
+            return null;
+        }
     }
 
     @Override
